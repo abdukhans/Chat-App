@@ -17,14 +17,14 @@ body{
     
     display: flex;
     flex-direction: row;
-    background-color:red;
-    width: 10%;
-        
+    background-color:aqua;
+    width: 100%;
+    justify-content: center;    
 }
 
 .Main form button {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     background-color: red;
 
 }
@@ -35,4 +35,21 @@ body{
     flex-direction: column-reverse;
     overflow-y: scroll;
     height: 75vh;
+}
+
+#MSGTYPE{
+    width: 400px;
+    height: 50px;
+    border: 1px;
+
+    padding: 5px;
+
+    border-radius: 50px;
+}
+
+.ButtonHolder{
+    padding: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
