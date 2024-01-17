@@ -9,6 +9,7 @@ function SendMsg(e) {
     const input = document.querySelector('input')
 
     if (input.value) {
+        
         socket.send(input.value)
         input.value = ''
     }

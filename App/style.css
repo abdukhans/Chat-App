@@ -1,0 +1,38 @@
+body{
+    margin: 0px;
+    padding: 0px;
+}
+
+.Main{
+    margin: 0px;
+    padding: 0px;
+    display: flex;
+    flex-direction: column;
+    background-color: aqua;
+    align-items: center;
+    height: 100vh;
+}
+
+.Main form{
+    
+    display: flex;
+    flex-direction: row;
+    background-color:red;
+    width: 10%;
+        
+}
+
+.Main form button {
+    display: flex;
+    flex-direction: column;
+    background-color: red;
+
+}
+
+
+.MSG{
+    display: flex;
+    flex-direction: column-reverse;
+    overflow-y: scroll;
+    height: 75vh;
+}
