@@ -1,6 +1,7 @@
 const socket = new WebSocket('ws://localhost:3000')
 
 
+
 function SendMsg(e) {
     e.preventDefault();
     //console.log(e);
@@ -20,8 +21,23 @@ function SendMsg(e) {
 document.querySelector('form').addEventListener("submit", SendMsg)
 
 
+
 socket.addEventListener("message", ({ data }) => {
     const li = document.createElement('li')
-    li.textContent = data
+
+    li.classList.add("MsgBox")
+
+    li.textContent = data;
+
+
+
+
+
+
     document.querySelector('ul').appendChild(li)
+
+
+    // const el = document.getElementsByTagName( `li`)
+
+    // el[0].textContent="NOOOOOOOOOOOOOO!"
 })

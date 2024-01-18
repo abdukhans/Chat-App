@@ -1,6 +1,12 @@
+
 body{
     margin: 0px;
     padding: 0px;
+    --MSGWIDTH: 800px;
+    --MSGHEIGHT:80px;
+    --MainCol: rgb(43, 40, 40);
+    --TextMsg: rgb(67, 64, 64);
+    scroll-behavior: none;
 }
 
 .Main{
@@ -8,7 +14,7 @@ body{
     padding: 0px;
     display: flex;
     flex-direction: column;
-    background-color: aqua;
+    background-color: var(--MainCol);
     align-items: center;
     height: 100vh;
 }
@@ -17,7 +23,7 @@ body{
     
     display: flex;
     flex-direction: row;
-    background-color:aqua;
+    background-color:inherit;
     width: 100%;
     justify-content: center;    
 }
@@ -34,17 +40,20 @@ body{
     display: flex;
     flex-direction: column-reverse;
     overflow-y: scroll;
+    overflow-x: hidden;
+    width: var(--MSGWIDTH);
     height: 75vh;
 }
 
 #MSGTYPE{
-    width: 400px;
+    background-color: var(--TextMsg);
+    width: var(--MSGWIDTH);
     height: 50px;
     border: 1px;
 
     padding: 5px;
 
-    border-radius: 50px;
+    border-radius: 5px;
 }
 
 .ButtonHolder{
@@ -52,4 +61,34 @@ body{
     display: flex;
     justify-content: center;
     align-items: center;
+}
+
+.MSGBoard{
+    padding-top: 10px;
+    width: var(--MSGWIDTH);
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: white;
+}
+ul{
+    list-style: none;
+    padding: 0px;
+    margin: 0px;
+}
+.MsgBox{
+    width: var(--MSGWIDTH);
+    height: var(--MSGHEIGHT);
+    text-decoration: none;
+    background-color: red;
+
+    margin: 0px;
+    margin-top: 4px;
+
+    border-radius: 10px;
+
+}
+
+form{
+    margin-top: 10px;
 }
