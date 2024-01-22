@@ -4,7 +4,6 @@ const socket = new WebSocket('ws://localhost:3000')
 
 function SendMsg(e) {
     e.preventDefault();
-    //console.log(e);
 
 
     const input = document.querySelector('input')
