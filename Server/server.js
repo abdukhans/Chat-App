@@ -1,6 +1,16 @@
 const ws = require('ws')
 const server = new ws.Server({port:3000, clientTracking:true})
+const msgs = []
 server.on('connection',socket=>{
+
+    //console.log(socket);
+    
+
+  
+    //msgs.forEach((msg)=> socket.send(`${msg}`))
+           
+
+    
         
 
     //console.log(server.clients)
@@ -10,6 +20,8 @@ server.on('connection',socket=>{
 
         //console.log(server.clients);
 
+        msgs.push(message)
+
         server.clients.forEach((socket)=>{
 
             socket.send(`${message}`)
@@ -17,6 +29,8 @@ server.on('connection',socket=>{
 
 
         })
+
+        console.log(msgs);
         
         //key.send(`${message}`)
         
