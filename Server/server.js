@@ -3,11 +3,111 @@ const ws = require('ws')
 const express = require('express')
 const app = express()
 const bcrypt = require('bcrypt');
+const {save} = require('./DB/save')
+const {getUserByName} = require('./DB/getUser')
+const jwt = require('jsonwebtoken')
 require('dotenv').config()
 
-const { Pool } = require('pg');
+const { Pool, Client } = require('pg');
+const client = new Client({
+    connectionString:process.env.DATABASE_URL_CLIENT
+})
 
+
+users = []
 app.use(express.json())
+
+
+
+function authenticate(req,res,next) {
+
+  console.log("authenticating");
+
+
+  const authHeader = req.headers['authorization'];
+
+  const token = authHeader && authHeader.split(' ')[1];
+
+  if (token == null) return res.send(401);
+  jwt.verify(token,process.env.SECRET_KEY,(err,user)=>{
+
+    if (err) {
+      return res.send()
+    }
+
+
+    req.user = user
+
+  })
+
+
+  
+  next();
+}
+app.use('/auth',authenticate);
+
+
+
+app.post('/api/users/signUp', async (req,res)=>{
+
+  try {
+    const user = {name:req.body.name , hashedPass : req.body.password }
+    const password = req.body.password
+    const hashedPass = await bcrypt.hash(password,10);
+    const seqUser = {name: req.body.name, hashedPass: hashedPass}
+
+
+    await save(seqUser)
+    res.status(201).send()
+    
+  } catch (error) {
+    console.log(error);
+    res.status(500).send()
+  }
+ 
+
+
+})
+
+app.post('/api/users/login',async (req,res,next)=>{
+
+
+  const user = req.body;
+
+
+  hashed_pass = await getUserByName(user.name)
+
+
+  //console.log(hashed_pass);
+
+
+
+
+  bcrypt.compare(user.password, hashed_pass, function(err, res_) {
+
+
+  //console.log(res_);
+
+ 
+  if (err){
+    // console.log("err:" ,err);
+    // console.log("rr");
+    return res.status(500).json({success: false, message: 'something went wrong when comparing passwords'}); 
+  }
+  if (res_) {
+    // Send JWT 
+    const token  = jwt.sign(user,process.env.SECRET_KEY)
+    return res.status(201).json({success: true, access_token:token})
+  } else {
+    // response is OutgoingMessage object that server response http request
+    return res.status(401).json({success: false, message: 'passwords do not match'});
+  }
+});
+
+
+
+})
+
 
 
 //CreateTable()
@@ -108,14 +208,16 @@ wsServer.on('close', async (socket)=>{
   
 })
 
+
 const server = app.listen(3000)
 
 
 
 
-
+console.log(server.address())
 server.on('upgrade', (request, socket, head) => {
   wsServer.handleUpgrade(request, socket, head, socket => {
+    console.log("Upgrading to websocket");
     wsServer.emit('connection', socket, request);
   });
 });
