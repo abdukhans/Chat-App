@@ -1,4 +1,4 @@
-const socket = new WebSocket('ws://localhost:3000/?clientID=1234l1e12jknli999mkmnjk')
+const socket = new WebSocket('ws://localhost:3000')
 
 
 

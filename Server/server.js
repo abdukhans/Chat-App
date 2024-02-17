@@ -2,13 +2,19 @@ const http = require('http')
 const ws = require('ws')
 const express = require('express')
 const app = express()
+// const expressWs = require('express-ws')(app)
 const bcrypt = require('bcrypt');
 const {save} = require('./DB/save')
 const {getUserByName} = require('./DB/getUser')
+const authMiddleware = require("./middleware/auth")
 const jwt = require('jsonwebtoken')
+
+
+
 require('dotenv').config()
 
 const { Pool, Client } = require('pg');
+const { log } = require('console');
 const client = new Client({
     connectionString:process.env.DATABASE_URL_CLIENT
 })
@@ -19,7 +25,7 @@ app.use(express.json())
 
 
 
-function authenticate(req,res,next) {
+function authenticate_(req,res,next) {
 
   console.log("authenticating");
 
@@ -32,6 +38,7 @@ function authenticate(req,res,next) {
   jwt.verify(token,process.env.SECRET_KEY,(err,user)=>{
 
     if (err) {
+
       return res.send()
     }
 
@@ -44,7 +51,29 @@ function authenticate(req,res,next) {
   
   next();
 }
-app.use('/auth',authenticate);
+
+function authWebSocket(req) {
+  
+
+  const params = new URLSearchParams(req.url);
+
+  const token  = params.get('/$clientID');
+
+  if (token == null) return false;
+    jwt.verify(token,process.env.SECRET_KEY,(err,user)=>{
+    if (err) {
+      return false
+    }
+  })
+
+
+  return true
+
+}
+
+//app.use('api/v1/auth',authRouter);
+app.use('api/v1/auth',authMiddleware);
+app.use('/',authenticate_)
 
 
 
@@ -55,7 +84,6 @@ app.post('/api/users/signUp', async (req,res)=>{
     const password = req.body.password
     const hashedPass = await bcrypt.hash(password,10);
     const seqUser = {name: req.body.name, hashedPass: hashedPass}
-
 
     await save(seqUser)
     res.status(201).send()
@@ -130,6 +158,8 @@ async function getPostgresVersion() {
 
 
 getPostgresVersion();
+
+
 
 const wsServer = new ws.Server({noServer:true, clientTracking:true})
 const msgs = ["m1","m2"]
@@ -215,9 +245,24 @@ const server = app.listen(3000)
 
 
 console.log(server.address())
+
 server.on('upgrade', (request, socket, head) => {
+
+  console.log("REQ: ", request.url);
   wsServer.handleUpgrade(request, socket, head, socket => {
     console.log("Upgrading to websocket");
+
+    const params = new URLSearchParams(request.url);
+    const authed = authWebSocket(request)
+
+    if (!authed) {
+        // \r\n\r\n: These are control characters used in HTTP to
+        // denote the end of the HTTP headers section.
+        console.log("JWT FAILED")
+        socket.close()
+        return
+    }
+  
     wsServer.emit('connection', socket, request);
   });
 });
