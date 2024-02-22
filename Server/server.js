@@ -8,7 +8,10 @@ const {save} = require('./DB/save')
 const {getUserByName} = require('./DB/getUser')
 const authMiddleware = require("./middleware/auth")
 const jwt = require('jsonwebtoken')
+const cors = require('cors');
 
+
+app.use(cors())
 
 
 require('dotenv').config()
@@ -30,7 +33,7 @@ function authenticate_(req,res,next) {
   console.log("authenticating");
 
 
-  const authHeader = req.headers['authorization'];
+  const authHeader = req.headers['Authorization'];
 
   const token = authHeader && authHeader.split(' ')[1];
 
@@ -39,7 +42,7 @@ function authenticate_(req,res,next) {
 
     if (err) {
 
-      return res.send()
+      return res.send(401)
     }
 
 
