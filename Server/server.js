@@ -76,8 +76,15 @@ function authWebSocket(req) {
 
 //app.use('api/v1/auth',authRouter);
 app.use('api/v1/auth',authMiddleware);
-app.use('/',authenticate_)
+// app.use('/',authenticate_)
+app.use('/api/users', async(req,res,next)=>{
 
+
+  req.user = {name:req.body.name , hashedPass : req.body.password }
+
+  next();
+
+})
 
 
 app.post('/api/users/signUp', async (req,res)=>{
@@ -106,35 +113,37 @@ app.post('/api/users/login',async (req,res,next)=>{
   const user = req.body;
 
 
-  hashed_pass = await getUserByName(user.name)
+  const hashed_pass = await getUserByName(user.name)
 
 
   //console.log(hashed_pass);
 
+  if (hashed_pass) {
+    
+
+    bcrypt.compare(user.password, hashed_pass, function(err, res_) {
 
 
+    //console.log(res_);
 
-  bcrypt.compare(user.password, hashed_pass, function(err, res_) {
-
-
-  //console.log(res_);
-
- 
-  if (err){
-    // console.log("err:" ,err);
-    // console.log("rr");
-    return res.status(500).json({success: false, message: 'something went wrong when comparing passwords'}); 
+  
+    if (err){
+      // console.log("err:" ,err);
+      // console.log("rr");
+      return res.status(500).json({success: false, message: 'something went wrong when comparing passwords'}); 
+    }
+    if (res_) {
+      // Send JWT 
+      const token  = jwt.sign(user,process.env.SECRET_KEY)
+      return res.status(201).json({success: true, access_token:token})
+    } else {
+      // response is OutgoingMessage object that server response http request
+      return res.status(401).json({success: false, message: 'passwords do not match'});
+    }
+  });
+  }else{
+    return res.status(401).json({success:false, message: 'User does not exist'})
   }
-  if (res_) {
-    // Send JWT 
-    const token  = jwt.sign(user,process.env.SECRET_KEY)
-    return res.status(201).json({success: true, access_token:token})
-  } else {
-    // response is OutgoingMessage object that server response http request
-    return res.status(401).json({success: false, message: 'passwords do not match'});
-  }
-});
-
 
 
 })

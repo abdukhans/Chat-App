@@ -19,7 +19,7 @@ async function getUserByName(user_u_name){
     // console.log(name);
     // console.log(hashedPass)
     const query = `SELECT * FROM users WHERE u_name='${user_u_name}';`
-    console.log(query);
+    //console.log(query);
     const res = await client.query({ text:query})
 
 
@@ -32,7 +32,15 @@ async function getUserByName(user_u_name){
     await client.end()
     //console.log("client is closed");
 
-    return res.rows[0].hash_pass;
+    //console.log("Res:",res);
+
+
+    if (res.rows.length > 0) {
+        
+    
+
+        return res.rows[0].hash_pass;
+    }
 }
 
 
