@@ -11,6 +11,8 @@ const jwt = require('jsonwebtoken')
 const cors = require('cors');
 
 
+app.use(express.json())
+
 app.use(cors())
 
 
@@ -24,8 +26,6 @@ const client = new Client({
 
 
 users = []
-app.use(express.json())
-
 
 
 function authenticate_(req,res,next) {
@@ -79,7 +79,11 @@ app.use('api/v1/auth',authMiddleware);
 // app.use('/',authenticate_)
 app.use('/api/users', async(req,res,next)=>{
 
+  // console.log("GETTING USER");
 
+  console.log(req.body);
+
+  req.num = 3;
   req.user = {name:req.body.name , hashedPass : req.body.password }
 
   next();
@@ -90,13 +94,14 @@ app.use('/api/users', async(req,res,next)=>{
 app.post('/api/users/signUp', async (req,res)=>{
 
   try {
-    const user = {name:req.body.name , hashedPass : req.body.password }
-    const password = req.body.password
+    const user = req.user
+    const password = user.password
     const hashedPass = await bcrypt.hash(password,10);
-    const seqUser = {name: req.body.name, hashedPass: hashedPass}
+    const seqUser = {name: user.name, hashedPass: hashedPass}
 
     await save(seqUser)
-    res.status(201).send()
+    const token  = jwt.sign(user,process.env.SECRET_KEY)
+    return res.status(201).json({success: true, access_token:token})
     
   } catch (error) {
     console.log(error);
@@ -110,7 +115,10 @@ app.post('/api/users/signUp', async (req,res)=>{
 app.post('/api/users/login',async (req,res,next)=>{
 
 
-  const user = req.body;
+  console.log("N: ",req.num);
+  const user = req.user;
+
+  console.log(user);
 
 
   const hashed_pass = await getUserByName(user.name)
