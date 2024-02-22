@@ -15,22 +15,37 @@ async function GetJWT(e) {
     const Token = "asfadsf"
 
 
-  
-
-    const repsonse = await fetch("http://localhost:3000/api/users/login",
+    const response = await fetch("http://localhost:3000/api/users/login",
         {
             method: "POST",
             headers:{
                 "Authorization": `Bearer ${Token}`
             },
             body:{
-                name: userName
+                name: userName,
+                password: password,
             }
             
         }
     )
+        
 
-    console.log(repsonse.status);
+  
+    const res = await response.json();
+  
+
+
+
+
+    if (!res.success) {
+        console.log(res.message);
+    }else{
+        localStorage.setItem('TOKEN',res.access_token) 
+    }
+
+
+
+
         
 
 
