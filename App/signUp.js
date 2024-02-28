@@ -14,7 +14,8 @@ async function GetJWT(e) {
 
     const Token = "asfadsf"
   
-
+ const user = { name: userName,
+                password: password}
     const response = await fetch("http://localhost:3000/api/users/signUp",
         {
             method: "POST",
@@ -22,10 +23,7 @@ async function GetJWT(e) {
                 "Authorization": `Bearer ${Token}`,
                 "Content-Type": "application/json"
             },
-            body:{
-                name: userName,
-                password: password
-            }
+            body:JSON.stringify(user)
             
         }
     )
@@ -39,6 +37,10 @@ async function GetJWT(e) {
     }else{
         localStorage.setItem('TOKEN',res.access_token) 
     }
+
+
+    location.replace("MSG.html")
+
 
 
     

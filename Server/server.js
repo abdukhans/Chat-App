@@ -11,9 +11,10 @@ const jwt = require('jsonwebtoken')
 const cors = require('cors');
 
 
+app.use(cors())
+
 app.use(express.json())
 
-app.use(cors())
 
 
 require('dotenv').config()
@@ -79,7 +80,7 @@ app.use('api/v1/auth',authMiddleware);
 // app.use('/',authenticate_)
 app.use('/api/users', async(req,res,next)=>{
 
-  // console.log("GETTING USER");
+  console.log("GETTING USER");
 
   console.log(req.body);
 
@@ -95,14 +96,28 @@ app.post('/api/users/signUp', async (req,res)=>{
 
   try {
     const user = req.user
-    const password = user.password
-    const hashedPass = await bcrypt.hash(password,10);
-    const seqUser = {name: user.name, hashedPass: hashedPass}
 
-    await save(seqUser)
-    const token  = jwt.sign(user,process.env.SECRET_KEY)
-    return res.status(201).json({success: true, access_token:token})
+
+    const password = user.hashedPass
+    await bcrypt.hash(password,10,async  function (err, hash) {
+
+
+      if (err) {
+        throw err;
+      }
+
+      //const hashedPass =3 ;
+      // /console.log("U: ", user);
+      const seqUser = {name: user.name, hashedPass: hash}
+
+      await save(seqUser)
+      const token  = jwt.sign(user,process.env.SECRET_KEY)
+      //const token = 4
+      return res.status(201).json({success: true, access_token:token})
     
+      
+    });
+   
   } catch (error) {
     console.log(error);
     res.status(500).send()
@@ -114,12 +129,8 @@ app.post('/api/users/signUp', async (req,res)=>{
 
 app.post('/api/users/login',async (req,res,next)=>{
 
-
-  console.log("N: ",req.num);
   const user = req.user;
-
   console.log(user);
-
 
   const hashed_pass = await getUserByName(user.name)
 
