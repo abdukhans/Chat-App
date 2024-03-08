@@ -1,8 +1,9 @@
 
+const socket = new WebSocket(`ws://localhost:3000/?clientId=${localStorage.getItem('TOKEN')}`)
 
-const socket = new WebSocket(`ws://localhost:3000/?clientId={}`)
 
 
+console.log(localStorage.getItem('TOKEN'));
 
 function SendMsg(e) {
     e.preventDefault();

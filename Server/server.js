@@ -61,14 +61,20 @@ function authWebSocket(req) {
 
   const params = new URLSearchParams(req.url);
 
-  const token  = params.get('/$clientID');
+  const token  = params.get('/?clientId');
 
-  if (token == null) return false;
-    jwt.verify(token,process.env.SECRET_KEY,(err,user)=>{
-    if (err) {
-      return false
-    }
-  })
+
+  console.log("TOKEN :" , token.toLocaleLowerCase());
+
+  if (token==='null') {
+    
+    return false;
+  }
+  jwt.verify(token,process.env.SECRET_KEY,(err,user)=>{
+  if (err) {
+    return false
+  }
+})
 
 
   return true
@@ -140,7 +146,10 @@ app.post('/api/users/login',async (req,res,next)=>{
   if (hashed_pass) {
     
 
-    bcrypt.compare(user.password, hashed_pass, function(err, res_) {
+    bcrypt.compare(user.hashedPass, hashed_pass, function(err, res_) {
+
+
+    console.log("COMPARING : ", user.hashedPass, hashed_pass );
 
 
     //console.log(res_);
@@ -283,13 +292,17 @@ server.on('upgrade', (request, socket, head) => {
   wsServer.handleUpgrade(request, socket, head, socket => {
     console.log("Upgrading to websocket");
 
+    //console.log(socket);
+
     const params = new URLSearchParams(request.url);
     const authed = authWebSocket(request)
 
-    if (!authed) {
+
+    console.log("authed: ",authed);
+    if (!authed ) {
         // \r\n\r\n: These are control characters used in HTTP to
         // denote the end of the HTTP headers section.
-        console.log("JWT FAILED")
+        console.log("JWT FAILED" ,authed)
         socket.close()
         return
     }
