@@ -1,8 +1,11 @@
 {
     "compilerOptions": {
         "target": "ES5",
-        "watch": true,
-
+        "esModuleInterop": true,
         "outDir": "./dist"
+    },
+
+    "watchOptions": {
+        "watchFile": "useFsEvents"
     }
 }
