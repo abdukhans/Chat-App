@@ -101,7 +101,7 @@ app.post('/api/users/signUp', async (req,res)=>{
   try {
     const user = req.user
 
-
+ 
     const password = user.hashedPass
     await bcrypt.hash(password,10,async  function (err, hash) {
 
