@@ -1,4 +1,1 @@
-import {main} from "./server"
-
-
-main();
+import * as p from "./server"

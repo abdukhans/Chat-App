@@ -2,8 +2,12 @@
     "compilerOptions": {
         "target": "ES5",
         "esModuleInterop": true,
-        "outDir": "./dist"
+        "outDir": "./dist",
+        "paths": {
+            "baseUrl": ["./Server"]
+        }
     },
+
 
     "watchOptions": {
         "watchFile": "useFsEvents"
