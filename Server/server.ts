@@ -1,14 +1,38 @@
-const http = require('http')
-const ws = require('ws')
-const express = require('express')
-const app = express()
-// const expressWs = require('express-ws')(app)
-const bcrypt = require('bcrypt');
-const {save} = require('./DB/save')
+import   WebSocket, {RawData, Server}   from 'ws'
+import {IncomingMessage} from "http"
+import express, {Request,Response} from 'express'
+import jwt from "jsonwebtoken"
+import bcrypt from "bcrypt"
+import {User} from "./types"
+
+const app     = express()
+
+// const bcrypt  = require('bcrypt');
+const {save}  = require('./DB/save')
 const {getUserByName} = require('./DB/getUser')
 const authMiddleware = require("./middleware/auth")
-const jwt = require('jsonwebtoken')
-const cors = require('cors');
+// const jwt = require('jsonwebtoken')
+
+
+import cors from 'cors'
+// const cors = require('cors');
+
+// interface SavedUser{
+//   name: string,
+//   hashedPass: string
+// }
+
+
+// interface User extends Request{
+//   user?: SavedUser,
+//   name?: any
+// }
+
+
+
+
+
+
 
 
 app.use(cors())
@@ -54,7 +78,7 @@ function authenticate_(req,res,next) {
   next();
 }
 
-function authWebSocket(req) {
+function authWebSocket(req:IncomingMessage): Boolean {
   
 
   const params = new URLSearchParams(req.url);
@@ -68,11 +92,16 @@ function authWebSocket(req) {
     
     return false;
   }
+
+
+
+
+  // TODO: remove callback here  
   jwt.verify(token,process.env.SECRET_KEY,(err,user)=>{
-  if (err) {
-    return false
-  }
-})
+    if (err) {
+      return false
+    }
+  })
 
 
   return true
@@ -82,13 +111,12 @@ function authWebSocket(req) {
 //app.use('api/v1/auth',authRouter);
 app.use('api/v1/auth',authMiddleware);
 // app.use('/',authenticate_)
-app.use('/api/users', async(req,res,next)=>{
+app.use('/api/users', async(req:User,res,next)=>{
 
   console.log("GETTING USER");
 
   console.log(req.body);
 
-  req.num = 3;
   req.user = {name:req.body.name , hashedPass : req.body.password }
 
   next();
@@ -96,12 +124,12 @@ app.use('/api/users', async(req,res,next)=>{
 })
 
 
-app.post('/api/users/signUp', async (req,res)=>{
+app.post('/api/users/signUp', async (req:User,res)=>{
 
   try {
     const user = req.user
 
- 
+
     const password = user.hashedPass
     await bcrypt.hash(password,10,async  function (err, hash) {
 
@@ -131,7 +159,13 @@ app.post('/api/users/signUp', async (req,res)=>{
 
 })
 
-app.post('/api/users/login',async (req,res,next)=>{
+
+
+
+
+
+
+app.post('/api/users/login',async (req:User,res,next)=>{
 
   const user = req.user;
   console.log(user);
@@ -199,10 +233,18 @@ getPostgresVersion();
 
 
 
-const wsServer = new ws.Server({noServer:true, clientTracking:true})
-const msgs = ["m1","m2"]
-const sockets = []
+const wsServer:WebSocket.Server = new WebSocket.Server({noServer:true, clientTracking:true})
+const msgs    :String[] = []
+
+
+
+
+const sockets :WebSocket[]= []
+
+
 const mapIdSocks = {}
+
+
 wsServer.on('connection', async (socket,req)=>{
 
     
@@ -216,7 +258,7 @@ wsServer.on('connection', async (socket,req)=>{
 
     mapIdSocks[params.get('/?clientID')] = socket
 
-    socket.clientId = params.get('/?clientID')
+    // socket = params.get('/?clientID')
 
 
     sockets.push(socket);
@@ -236,38 +278,24 @@ wsServer.on('connection', async (socket,req)=>{
 
         //console.log(server.clients);
 
-        msgs.push(message)
+        msgs.push(message.toString())
         socket.send(`${message}`)
 
         sockets.forEach((socket_v)=>{
-          if (socket_v != socket) {
-            console.log(socket.clientId);
+          if (socket_v != socket){ 
+            // console.log(socket.clientId);
             socket_v.send(`${message}`)
           }
             
         })
-        // server.clients.forEach((socket)=>{
-
-        //     socket.send(`${message}`)
-
-
-
-        // })
+        
 
         console.log(msgs);
         
-        //key.send(`${message}`)
-        
-        // console.log('MSG: ',b.toString());
-        // socket.send(`${message}`)
+
     })
 })
 
-// socket.addEventListener("message", ({ data }) => {
-//     const li = document.createElement('li')
-//     li.textContent = data
-//     document.querySelector('ul').appendChild(li)
-// })
 
 
 wsServer.on('close', async (socket)=>{
