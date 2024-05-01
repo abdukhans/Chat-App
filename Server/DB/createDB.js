@@ -13,4 +13,6 @@ async function CreateTable(){
 }
 
 
-module.exports = {CreateTable}
+// module.exports = {CreateTable}
+
+module.exports =  {CreateTable}

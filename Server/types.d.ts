@@ -1,12 +1,22 @@
 import {Request} from "express"
+import { JwtPayload } from "jsonwebtoken"
 interface SavedUser{
   name: string,
   hashedPass: string
 }
 
-interface User extends Request{
-  user?: SavedUser,
+
+
+interface IncomingUser  {
+   name: string,
+   password: string,
+} 
+
+
+
+interface UserRequest extends Request{
+  user?: IncomingUser,
   name?: any
 }
 
-export {SavedUser, User}
+export {SavedUser, UserRequest, IncomingUser}

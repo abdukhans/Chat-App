@@ -26,8 +26,7 @@ async function GetJWT(e) {
 
     console.log("USER :" , user);
 
-
-    const response = await fetch("http://localhost:3000/api/users/login",
+    const response = await fetch("http://localhost:3000/api/v1/auth/login",
         {
             method: "POST",
             headers:{

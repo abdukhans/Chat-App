@@ -3,32 +3,14 @@ import {IncomingMessage} from "http"
 import express, {Request,Response} from 'express'
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
-import {User} from "./types"
-
+import {UserRequest} from "./types"
 const app     = express()
-
-// const bcrypt  = require('bcrypt');
 const {save}  = require('./DB/save')
 const {getUserByName} = require('./DB/getUser')
-const authMiddleware = require("./middleware/auth")
-// const jwt = require('jsonwebtoken')
-
+import authMiddleware from "./middleware/auth"
+import {authRouter} from './routes/auth'
 
 import cors from 'cors'
-// const cors = require('cors');
-
-// interface SavedUser{
-//   name: string,
-//   hashedPass: string
-// }
-
-
-// interface User extends Request{
-//   user?: SavedUser,
-//   name?: any
-// }
-
-
 
 
 
@@ -95,69 +77,75 @@ function authWebSocket(req:IncomingMessage): Boolean {
 
 
 
+ 
 
-  // TODO: remove callback here  
-  jwt.verify(token,process.env.SECRET_KEY,(err,user)=>{
-    if (err) {
-      return false
-    }
-  })
+  try {
+    jwt.verify(token,process.env.SECRET_KEY)
+    
+    return true
 
+  } catch (error) {
+    
+    return false
+  }
+  
 
-  return true
-
+  
 }
 
 //app.use('api/v1/auth',authRouter);
-app.use('api/v1/auth',authMiddleware);
+// app.use('api/v1/auth',authMiddleware);
 // app.use('/',authenticate_)
-app.use('/api/users', async(req:User,res,next)=>{
+
+app.use('/api/v1/auth',authRouter);
+
+app.use('/api/v1/users', async(req:UserRequest,res,next)=>{
 
   console.log("GETTING USER");
 
   console.log(req.body);
 
-  req.user = {name:req.body.name , hashedPass : req.body.password }
+  req.user = {name:req.body.name , password : req.body.password }
 
   next();
 
 })
 
 
-app.post('/api/users/signUp', async (req:User,res)=>{
+// app.post('/api/v1/auth/signUp', async (req:UserRequest,res)=>{
 
-  try {
-    const user = req.user
-
-
-    const password = user.hashedPass
-    await bcrypt.hash(password,10,async  function (err, hash) {
+//   try {
+//     const user = req.user
 
 
-      if (err) {
-        throw err;
-      }
+//     const password = user.password
+//     await bcrypt.hash(password,10,async  function (err, hash) {
 
-      //const hashedPass =3 ;
-      // /console.log("U: ", user);
-      const seqUser = {name: user.name, hashedPass: hash}
 
-      await save(seqUser)
-      const token  = jwt.sign(user,process.env.SECRET_KEY)
-      //const token = 4
-      return res.status(201).json({success: true, access_token:token})
+//       if (err) {
+//         throw err;
+//       }
+
+//       //const hashedPass =3 ;
+//       // /console.log("U: ", user);
+//       const seqUser = {name: user.name, hashedPass: hash}
+
+//       await save(seqUser)
+//       const token  = jwt.sign(user,process.env.SECRET_KEY)
+//       //const token = 4
+//       return res.status(201).json({success: true, access_token:token})
     
       
-    });
+//     });
    
-  } catch (error) {
-    console.log(error);
-    res.status(500).send()
-  }
+//   } catch (error) {
+//     console.log(error);
+//     res.status(500).send()
+//   }
  
 
 
-})
+// })
 
 
 
@@ -165,48 +153,50 @@ app.post('/api/users/signUp', async (req:User,res)=>{
 
 
 
-app.post('/api/users/login',async (req:User,res,next)=>{
+// app.post('/api/v1/auth/login',async (req:UserRequest,res,next)=>{
 
-  const user = req.user;
-  console.log(user);
+//   const user = req.user;
+//   console.log(user);
 
-  const hashed_pass = await getUserByName(user.name)
+//   const hashed_pass = await getUserByName(user.name)
 
 
-  //console.log(hashed_pass);
+//   //console.log(hashed_pass);
 
-  if (hashed_pass) {
+//   if (hashed_pass) {
     
 
-    bcrypt.compare(user.hashedPass, hashed_pass, function(err, res_) {
+//     bcrypt.compare(user.password, hashed_pass, function(err, res_) {
 
 
-    console.log("COMPARING : ", user.hashedPass, hashed_pass );
+//     console.log("COMPARING : ", user.password, hashed_pass );
 
 
-    //console.log(res_);
+//     //console.log(res_);
 
   
-    if (err){
-      // console.log("err:" ,err);
-      // console.log("rr");
-      return res.status(500).json({success: false, message: 'something went wrong when comparing passwords'}); 
-    }
-    if (res_) {
-      // Send JWT 
-      const token  = jwt.sign(user,process.env.SECRET_KEY)
-      return res.status(201).json({success: true, access_token:token})
-    } else {
-      // response is OutgoingMessage object that server response http request
-      return res.status(401).json({success: false, message: 'passwords do not match'});
-    }
-  });
-  }else{
-    return res.status(401).json({success:false, message: 'User does not exist'})
-  }
+//     if (err){
+//       // console.log("err:" ,err);
+//       // console.log("rr");
+//       return res.status(500).json({success: false, message: 'something went wrong when comparing passwords'}); 
+//     }
+//     if (res_) {
+//       // Send JWT 
+//       const token  = jwt.sign(user,process.env.SECRET_KEY)
+
+//       console.log("TOKEN: ", token)
+//       return res.status(201).json({success: true, access_token:token})
+//     } else {
+//       // response is OutgoingMessage object that server response http request
+//       return res.status(401).json({success: false, message: 'passwords do not match'});
+//     }
+//   });
+//   }else{
+//     return res.status(401).json({success:false, message: 'User does not exist'})
+//   }
 
 
-})
+// })
 
 
 
