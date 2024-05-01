@@ -93,9 +93,6 @@ function authWebSocket(req:IncomingMessage): Boolean {
   
 }
 
-//app.use('api/v1/auth',authRouter);
-// app.use('api/v1/auth',authMiddleware);
-// app.use('/',authenticate_)
 
 app.use('/api/v1/auth',authRouter);
 
@@ -111,92 +108,6 @@ app.use('/api/v1/users', async(req:UserRequest,res,next)=>{
 
 })
 
-
-// app.post('/api/v1/auth/signUp', async (req:UserRequest,res)=>{
-
-//   try {
-//     const user = req.user
-
-
-//     const password = user.password
-//     await bcrypt.hash(password,10,async  function (err, hash) {
-
-
-//       if (err) {
-//         throw err;
-//       }
-
-//       //const hashedPass =3 ;
-//       // /console.log("U: ", user);
-//       const seqUser = {name: user.name, hashedPass: hash}
-
-//       await save(seqUser)
-//       const token  = jwt.sign(user,process.env.SECRET_KEY)
-//       //const token = 4
-//       return res.status(201).json({success: true, access_token:token})
-    
-      
-//     });
-   
-//   } catch (error) {
-//     console.log(error);
-//     res.status(500).send()
-//   }
- 
-
-
-// })
-
-
-
-
-
-
-
-// app.post('/api/v1/auth/login',async (req:UserRequest,res,next)=>{
-
-//   const user = req.user;
-//   console.log(user);
-
-//   const hashed_pass = await getUserByName(user.name)
-
-
-//   //console.log(hashed_pass);
-
-//   if (hashed_pass) {
-    
-
-//     bcrypt.compare(user.password, hashed_pass, function(err, res_) {
-
-
-//     console.log("COMPARING : ", user.password, hashed_pass );
-
-
-//     //console.log(res_);
-
-  
-//     if (err){
-//       // console.log("err:" ,err);
-//       // console.log("rr");
-//       return res.status(500).json({success: false, message: 'something went wrong when comparing passwords'}); 
-//     }
-//     if (res_) {
-//       // Send JWT 
-//       const token  = jwt.sign(user,process.env.SECRET_KEY)
-
-//       console.log("TOKEN: ", token)
-//       return res.status(201).json({success: true, access_token:token})
-//     } else {
-//       // response is OutgoingMessage object that server response http request
-//       return res.status(401).json({success: false, message: 'passwords do not match'});
-//     }
-//   });
-//   }else{
-//     return res.status(401).json({success:false, message: 'User does not exist'})
-//   }
-
-
-// })
 
 
 
