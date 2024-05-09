@@ -7,13 +7,8 @@ import {IncomingUser} from '../types'
 
 
 function getIncommingUser (payload: JwtPayload | string):IncomingUser {
-
-
-
-
   if ((payload as string).anchor !== undefined ) {
-    
-
+  
 
     const name:string = payload['name']
     const password:string = payload['password']

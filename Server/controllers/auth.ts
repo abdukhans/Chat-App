@@ -2,7 +2,8 @@ import bcrypt from "bcrypt"
 import {Request} from "express"
 import {IncomingUser} from "../types"
 import jwt from "jsonwebtoken"
-const  {save,getUserByName} =  require('../DB')
+
+import {save,getUserByName} from '../DB'
 
 const signUp = async (req:Request,res)=>{
 
