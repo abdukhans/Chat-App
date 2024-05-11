@@ -1,5 +1,9 @@
-require('dotenv').config()
-const { Pool, Client } = require('pg')
+import {config} from "dotenv"
+
+
+config()
+import  { Pool, Client } from 'pg'
+
 
 
 async function save(user){

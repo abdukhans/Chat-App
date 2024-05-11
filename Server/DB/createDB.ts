@@ -2,7 +2,9 @@ import {config} from "dotenv"
 
 
 config()
-const { Pool, Client } = require('pg')
+
+
+import { Pool, Client } from 'pg'
 const client = new Client({
     connectionString:process.env.DATABASE_URL_CLIENT
 })

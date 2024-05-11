@@ -7,8 +7,9 @@ import {UserRequest} from "./types"
 const app     = express()
 const {save}  = require('./DB/save')
 const {getUserByName} = require('./DB/getUser')
-import authMiddleware from "./middleware/auth"
+import {authenticate as authMiddleware} from "./middleware/auth"
 import {authRouter} from './routes/auth'
+import {MsgRouter} from './routes/msg'
 
 import cors from 'cors'
 
@@ -31,34 +32,6 @@ const client = new Client({
 })
 
 
-
-
-function authenticate_(req,res,next) {
-
-  console.log("authenticating");
-
-
-  const authHeader = req.headers['Authorization'];
-
-  const token = authHeader && authHeader.split(' ')[1];
-
-  if (token == null) return res.send(401);
-  jwt.verify(token,process.env.SECRET_KEY,(err,user)=>{
-
-    if (err) {
-
-      return res.send(401)
-    }
-
-
-    req.user = user
-
-  })
-
-
-  
-  next();
-}
 
 function authWebSocket(req:IncomingMessage): Boolean {
   
@@ -94,19 +67,17 @@ function authWebSocket(req:IncomingMessage): Boolean {
 }
 
 
+
+// This will handle login and sign up, by given users access token
 app.use('/api/v1/auth',authRouter);
 
-app.use('/api/v1/users', async(req:UserRequest,res,next)=>{
 
-  console.log("GETTING USER");
-
-  console.log(req.body);
-
-  req.user = {name:req.body.name , password : req.body.password }
-
-  next();
-
-})
+// Once the user is logged in they will have to be authenticated by  "authMiddleware"
+// which will just check to see if the header has a valid Bearer token. 
+// If it does then "MsgRouter" will take control and will handle all App logic 
+// NOTE: that that the "MsgRouter" will not handle the webSocket stuff, just the things
+// needed before webSocket will take over logic 
+app.use('/api/v1/users', authMiddleware , MsgRouter );
 
 
 

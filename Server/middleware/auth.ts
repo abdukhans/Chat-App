@@ -6,21 +6,24 @@ import {IncomingUser} from '../types'
 
 
 
-function getIncommingUser (payload: JwtPayload | string):IncomingUser {
-  if ((payload as string).anchor !== undefined ) {
+function getIncommingUser (payload: JwtPayload):IncomingUser {
+
+
+  console.log(payload);
+  
   
 
     const name:string = payload['name']
     const password:string = payload['password']
 
+    
 
     return {name:name,password:password};
-  }
+  
 
 
 
-  throw new Error("Payload is not JwtPayload")
-
+ 
 
  
 
@@ -53,21 +56,26 @@ const authenticate = async (req:UserRequest,res:Response,next) =>{
     const payload =   jwt.verify(token,process.env.SECRET_KEY) as JwtPayload;
 
 
+    
+    
+
     const IncomingUser = getIncommingUser(payload);
 
 
 
 
 
+
+
     
 
-    // console.log("Payload: ", payload );
     
 
 
 
 
     req.user = IncomingUser
+    console.log("Payload: ", payload );
 
 
 
@@ -79,8 +87,13 @@ const authenticate = async (req:UserRequest,res:Response,next) =>{
 
   }catch(err){
 
-    console.log("Something went wrong");
+    // console.log("Something went wrong");
+   
+
+    console.log(err);
     
+    
+    return res.status(401).json({msg: 'Invalid TOKEN'})
 
   }
  
@@ -94,4 +107,4 @@ const authenticate = async (req:UserRequest,res:Response,next) =>{
   
   
 }
-export default authenticate
+export {authenticate}

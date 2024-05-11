@@ -1,9 +1,8 @@
-require('dotenv').config()
-// const { Pool, Client } = require('pg')
-
-import {Pool,Client} from 'pg'
+import {config} from "dotenv"
 
 
+config()
+import  { Pool, Client } from 'pg'
 
 
 async function getUserByName(user_u_name){
