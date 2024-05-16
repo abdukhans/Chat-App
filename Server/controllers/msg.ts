@@ -12,13 +12,17 @@ const createChat  = async (req:UserRequest,res):Promise<void> =>{
 
     try {
         await createNewChatDB(chat_name,user_name);
+
         return res.status(201).json({success: true, message: 'chat created'});
 
       
     } catch (error) {
-        return res.status(501).json({success: false, message: 'DB error could not create chat'});    
+        
+        
+        return res.status(501).json({success: false, message: error});    
     }
-    
+
+   
 }
 
 

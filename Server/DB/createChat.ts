@@ -19,11 +19,14 @@ const createNewChatDB = async  (chat_name:string,user_name:string): Promise<void
 
 
 
-    const query = `INSERT INTO CHATS VALUES ('${chat_name}','${user_name}');`
+    const InsertToChats = `INSERT INTO CHATS VALUES ('${chat_name}','${user_name}'); `
     
-
+    const InsertToChatUser = `INSERT INTO CHAT_USER (chat_name,user_name) VALUES ('${chat_name}','${user_name}');`
         
-    const res = await client.query({ text:query})
+    await client.query({ text:InsertToChats})
+    
+    await client.query({ text:InsertToChatUser})
+        
     
         
    
