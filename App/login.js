@@ -50,6 +50,7 @@ async function GetJWT(e) {
         console.log(res.message);
     }else{
         localStorage.setItem('TOKEN',res.access_token) 
+        localStorage.setItem('USER', res.user)
         location.replace("MSG.html")
     }
 

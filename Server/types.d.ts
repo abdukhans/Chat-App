@@ -1,10 +1,10 @@
 import {Request} from "express"
 import { JwtPayload } from "jsonwebtoken"
+import type {RawData} from 'ws'
 interface SavedUser{
   name: string,
   hashedPass: string
 }
-
 
 
 interface IncomingUser  {
@@ -19,4 +19,13 @@ interface UserRequest extends Request{
   name?: any
 }
 
-export {SavedUser, UserRequest, IncomingUser}
+
+interface MSGData {
+  msg:string,
+  user_name:string,
+  chat_name:string
+}
+
+
+
+export {SavedUser, UserRequest, MSGData , IncomingUser}

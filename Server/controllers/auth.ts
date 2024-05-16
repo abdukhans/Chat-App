@@ -28,7 +28,7 @@ const signUp = async (req:Request,res)=>{
       await save(seqUser)
       const token  = jwt.sign(user,process.env.SECRET_KEY)
       //const token = 4
-      return res.status(201).json({success: true, access_token:token})
+      return res.status(201).json({user:{name:user.name},success: true, access_token:token})
     
       
     });
@@ -76,7 +76,7 @@ const login  = async (req:Request,res,next)=>{
       const token  = jwt.sign(user,process.env.SECRET_KEY)
 
       console.log("TOKEN: ", token)
-      return res.status(201).json({success: true, access_token:token})
+      return res.status(201).json({user:{name:user.name},success: true, access_token:token})
     } else {
       // response is OutgoingMessage object that server response http request
       return res.status(401).json({success: false, message: 'passwords do not match'});

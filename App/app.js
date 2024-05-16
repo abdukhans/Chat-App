@@ -1,4 +1,5 @@
 
+const user_name = localStorage.getItem['USER_NAME']
 const socket = new WebSocket(`ws://localhost:3000/?clientId=${localStorage.getItem('TOKEN')}`)
 
 
@@ -9,11 +10,19 @@ function SendMsg(e) {
     e.preventDefault();
 
 
+
     const input = document.querySelector('input')
 
+
+    const data = {msg:input.value,name:user_name,chat_name:"N/A"}
+
+
+
     if (input.value) {
+
+        console.log(JSON.stringify(data));
         
-        socket.send(input.value)
+        socket.send(JSON.stringify(data))
         input.value = ''
     }
     input.focus()    

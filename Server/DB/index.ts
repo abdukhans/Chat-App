@@ -6,4 +6,5 @@ import {CreateTable} from './createDB'
 import {save} from './save'
 import {getUserByName} from './getUser'
 import {createNewChatDB}from './createChat'
-export   {CreateTable,createNewChatDB,save,getUserByName}
+import {saveMsg} from './saveMsg'
+export   {CreateTable,createNewChatDB,save,getUserByName,saveMsg}
