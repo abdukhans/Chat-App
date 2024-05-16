@@ -5,7 +5,6 @@ import   WebSocket, {RawData, Server}   from 'ws'
 import {IncomingMessage} from "http"
 
 
-console.log('asdf');
 
 function authWebSocket(req:IncomingMessage): Boolean {
   

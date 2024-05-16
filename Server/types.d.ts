@@ -26,6 +26,11 @@ interface MSGData {
   chat_name:string
 }
 
+interface JoinChatReq{  
+  user_name?:string,
+  chat_name?:string
+}
 
 
-export {SavedUser, UserRequest, MSGData , IncomingUser}
+
+export {SavedUser, UserRequest, MSGData , IncomingUser,JoinChatReq}
