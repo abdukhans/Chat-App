@@ -1,12 +1,14 @@
 import jwt from "jsonwebtoken"
 import bcrypt from "bcrypt"
-import {UserRequest,MSGData} from "./types"
+import {UserRequest,MSGData, IncomingUser} from "./types"
 import   WebSocket, {RawData, Server}   from 'ws'
 import {IncomingMessage} from "http"
+import {saveMsg,getUsersFromChat} from './DB'
+import e from "express"
 
 
 
-function authWebSocket(req:IncomingMessage): Boolean {
+function authWebSocket(req:IncomingMessage, socket:WebSocket): Boolean {
   
 
   const params = new URLSearchParams(req.url);
@@ -26,7 +28,17 @@ function authWebSocket(req:IncomingMessage): Boolean {
  
 
   try {
-    jwt.verify(token,process.env.SECRET_KEY)
+    //const paylod = JSON.parse( jwt.verify(token,process.env.SECRET_KEY)as string) as IncomingUser
+    
+
+    const payload = jwt.verify(token,process.env.SECRET_KEY) as IncomingUser
+
+    console.log('PAY' , payload);
+    
+
+    mapIdSocks.set(payload.name, socket);
+
+    console.log("mapIdSocks: ", mapIdSocks);
     
     return true
 
@@ -50,7 +62,7 @@ const msgs    :String[] = []
 const sockets :WebSocket[]= []
 
 
-const mapIdSocks = {}
+const mapIdSocks = new Map<string,WebSocket>();  
 
 
 
@@ -61,54 +73,115 @@ wsServer.on('connection', async (socket,req)=>{
     const params = new URLSearchParams(req.url)
 
 
-    
-    //console.log(socket);
-    //console.log(socket);
-    
+    const token = params.get('/?clientID');
+
+
+
 
     
 
-    mapIdSocks[params.get('/?clientID')] = socket
+    
+
+    // mapIdSocks[params.get('/?clientID')] = socket
 
     // socket = params.get('/?clientID')
 
 
-    sockets.push(socket);
+
+
+    // sockets.push(socket);
 //    await getPostgresVersion()
 
 
-    msgs.forEach((msg)=> socket.send(`${msg}`))
+    //msgs.forEach((msg)=> socket.send(`${msg}`))
            
 
-    
+   
+  
 
 
     //console.log(server.clients)
-    socket.on('message', message  =>{
+    socket.on('message', async message  =>{
 
-       console.log("string: ", message.toString());
 
-        const user = JSON.parse(message.toString())
-
-        console.log("OBJ: ",user);
         
 
-        const msg = user.msg
+        //console.log("string: ", message.toString());
+
+        const user = JSON.parse(message.toString()) as MSGData;
+
+       // console.log("OBJ: ",user);
+        
+
+        const {msg,chat_name,user_name} = user
+
+
+        //console.log("Chat_name: ", chat_name);
+
+
+        //console.log("USER TO INSET: ", user_name);
+        
+        
+        await saveMsg(msg,chat_name,user_name);
         //console.log(server.clients);
 
-        msgs.push(msg)
-        socket.send(`${msg}`)
 
-        sockets.forEach((socket_v)=>{
-          if (socket_v != socket){ 
-            // console.log(socket.clientId);
-            socket_v.send(`${msg}`)
+        const users_in_chat = await getUsersFromChat(chat_name);
+
+        //  console.log("USERs IN CHAT: " ,users_in_chat);
+
+
+        //console.log("USERS ONLINE = ", users_in_chat.keys());
+      
+      
+       
+
+
+        users_in_chat.forEach((user_name )=>{
+
+
+
+          //console.log("TRYING TO SEND ", user_name.user_name);
+          
+
+
+          const socket = mapIdSocks.get(user_name.user_name as string)
+
+
+          
+            
+          
+          if (socket) {
+            socket.send(msg)
+            //console.log("SEND TO USER  ", user_name);
+
+          }else{
+            //console.log("USER : ", user_name, "is not online");
+
           }
             
-        })
         
 
-        console.log(msgs);
+          
+        })
+
+        //msgs.push(msg)
+
+
+
+
+        //socket.send(`${msg}`)
+
+        // sockets.forEach((socket_v)=>{
+        //   if (socket_v != socket){ 
+        //     // console.log(socket.clientId);
+        //     socket_v.send(`${msg}`)
+        //   }
+            
+        // })
+        
+
+        //console.log(msgs);
         
 
     })
@@ -129,7 +202,7 @@ wsServer.handleUpgrade(request, socket, head, socket => {
     //console.log(socket);
 
     const params = new URLSearchParams(request.url);
-    const authed = authWebSocket(request)
+    const authed = authWebSocket(request,socket)
 
 
     console.log("authed: ",authed);

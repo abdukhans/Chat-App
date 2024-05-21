@@ -36,7 +36,7 @@ const joinChat =async (req:UserRequest,res) => {
 
     }catch(error){
 
-     return res.status(501).json({success: false, message: 'DB error could not create chat'});    
+     return res.status(501).json({success: false, message: error});    
     }
 }
 

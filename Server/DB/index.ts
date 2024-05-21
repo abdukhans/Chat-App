@@ -8,4 +8,5 @@ import {getUserByName} from './getUser'
 import {createNewChatDB}from './createChat'
 import {saveMsg} from './saveMsg'
 import {JoinChatDB} from './joinChat'
-export   {CreateTable,createNewChatDB,save,getUserByName,saveMsg,JoinChatDB}
+import {getUsersFromChat} from './getUserFromChat'
+export   {CreateTable,createNewChatDB,save,getUserByName,saveMsg,JoinChatDB,getUsersFromChat}
