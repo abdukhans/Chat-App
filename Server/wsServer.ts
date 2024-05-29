@@ -145,7 +145,7 @@ wsServer.on('connection', async (socket,req)=>{
           
 
 
-          const socket = mapIdSocks.get(user_name.user_name as string)
+          const socket = mapIdSocks.get(user_name.user_name)
 
 
           
