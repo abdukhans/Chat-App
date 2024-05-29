@@ -1,7 +1,5 @@
-if (localStorage.getItem('TOKEN')){
+if (localStorage.getItem('TOKEN') && localStorage.getItem('USER_NAME')){
     location.replace('MSG.html')
-
-
 }
 const form = document.getElementById("UserInfo");
 const UserName = document.getElementById('UserName');
@@ -42,7 +40,9 @@ async function GetJWT(e) {
   
     const res = await response.json();
   
+    
 
+    console.log(res);
 
 
 
@@ -50,7 +50,7 @@ async function GetJWT(e) {
         console.log(res.message);
     }else{
         localStorage.setItem('TOKEN',res.access_token) 
-        localStorage.setItem('USER', res.user)
+        localStorage.setItem('USER_NAME', res.user.name)
         location.replace("MSG.html")
     }
 
