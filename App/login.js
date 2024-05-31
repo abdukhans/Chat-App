@@ -1,5 +1,5 @@
 if (localStorage.getItem('TOKEN') && localStorage.getItem('USER_NAME')){
-    location.replace('MSG.html')
+    location.replace('DashBoard.html')
 }
 const form = document.getElementById("UserInfo");
 const UserName = document.getElementById('UserName');
@@ -28,7 +28,7 @@ async function GetJWT(e) {
         {
             method: "POST",
             headers:{
-                "Authorization": `Bearer ${Token}`,
+                //"Authorization": `Bearer ${Token}`,
                 "Content-Type": "application/json"
             },
             body: JSON.stringify(user)
@@ -51,7 +51,7 @@ async function GetJWT(e) {
     }else{
         localStorage.setItem('TOKEN',res.access_token) 
         localStorage.setItem('USER_NAME', res.user.name)
-        location.replace("MSG.html")
+        location.replace("DashBoard.html")
     }
 
 

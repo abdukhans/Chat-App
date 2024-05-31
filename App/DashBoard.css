@@ -1,0 +1,26 @@
+body {
+    --MSGWIDTH: 800px;
+    --MSGHEIGHT: 80px;
+    --MainCol: rgb(43, 40, 40);
+    --TextMsg: rgb(67, 64, 64);
+    --WelcomeH: 30%;
+    margin: 0px;
+    padding: 0px;
+    background-color: var(--MainCol);
+
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    scroll-behavior: none;
+}
+
+
+.DashBoard{
+
+    background-color: var(--MainCol);    
+
+}
+
