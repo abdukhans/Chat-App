@@ -1,5 +1,5 @@
 if (localStorage.getItem('TOKEN') && localStorage.getItem('USER_NAME')){
-    location.replace('DashBoard.html')
+    location.replace('MSG.html')
 }
 const form = document.getElementById("UserInfo");
 const UserName = document.getElementById('UserName');
@@ -51,7 +51,7 @@ async function GetJWT(e) {
     }else{
         localStorage.setItem('TOKEN',res.access_token) 
         localStorage.setItem('USER_NAME', res.user.name)
-        location.replace("DashBoard.html")
+        location.replace("MSG.html")
     }
 
 

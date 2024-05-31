@@ -20,7 +20,12 @@ body {
 
 .DashBoard{
 
-    background-color: var(--MainCol);    
+    background-color: var(--TextMsg);    
+
+    height: 70%;
+    width: 500pt;
+
+    border-radius: 5%;
 
 }
 

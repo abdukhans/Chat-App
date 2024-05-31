@@ -37,7 +37,7 @@ async function GetJWT(e) {
     }
 
 
-    location.replace("DashBoard.html")
+    location.replace("MSG.html")
 
 
 
