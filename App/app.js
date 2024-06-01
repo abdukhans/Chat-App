@@ -8,12 +8,21 @@ console.log(user_name.toString());
 console.log(localStorage.getItem('TOKEN'));
 
 function SendMsg(e) {
+    // if(socket.readyState !== socket.OPEN)
+    //     socket = new WebSocket(`ws://localhost:3000/?clientId=${localStorage.getItem('TOKEN')}`)
+    // {
+    // }
+    console.log(":w");
     e.preventDefault();
 
 
+   
+    const input = document.querySelector('#MSGTYPE > input[type=text]')
 
-    const input = document.querySelector('input')
 
+
+
+    console.log(input);
 
     const data = {msg:input.value,user_name:user_name,chat_name:"TestChatUI"}
 
@@ -31,6 +40,7 @@ function SendMsg(e) {
 
 
 document.querySelector('form').addEventListener("submit", SendMsg)
+document.querySelector('button').addEventListener("click", SendMsg)
 
 
 
