@@ -10,9 +10,7 @@ async function GetJWT(e) {
 
     const userName = UserName.value;
     const password  = Password.value;
-
-
-    const Token = "asfadsf"
+    
   
  const user = { name: userName,
                 password: password}
@@ -20,7 +18,7 @@ async function GetJWT(e) {
         {
             method: "POST",
             headers:{
-                "Authorization": `Bearer ${Token}`,
+                //"Authorization": `Bearer ${Token}`,
                 "Content-Type": "application/json"
             },
             body:JSON.stringify(user)
