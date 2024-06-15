@@ -14,12 +14,8 @@ const signUp = async (req:Request,res)=>{
 
 
     const password = user.password
-    await bcrypt.hash(password,10,async  function (err, hash) {
+    const hash = await bcrypt.hash(password,10)
 
-
-      if (err) {
-        throw err;
-      }
 
       //const hashedPass =3 ;
       // /console.log("U: ", user);
@@ -31,11 +27,10 @@ const signUp = async (req:Request,res)=>{
       return res.status(201).json({user:{name:user.name},success: true, access_token:token})
     
       
-    });
    
   } catch (error) {
-    console.log(error);
-    res.status(500).send()
+    
+    res.status(500).send({msg:error})
   }
  
 
@@ -47,7 +42,7 @@ const signUp = async (req:Request,res)=>{
 const login  = async (req:Request,res,next)=>{
 
   const user = req.body as IncomingUser;
-  console.log(user);
+  console.log(user); 
 
   const hashed_pass = await getUserByName(user.name)
 

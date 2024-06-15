@@ -29,9 +29,10 @@ const createChat  = async (req:UserRequest,res):Promise<void> =>{
 const joinChat =async (req:UserRequest,res) => {
     
     const {chat_name, user_name} = req.body as JoinChatReq;
+    const user = req.user;
     try{
 
-        await JoinChatDB(chat_name,user_name);
+        await JoinChatDB(chat_name,user.name);
         return res.status(201).json({success: true, message: `You have have joined: ${chat_name}`});
 
     }catch(error){

@@ -22,9 +22,10 @@ async function save(user){
     console.log(hashedPass)
     const query = `INSERT INTO users VALUES ('${name}','${hashedPass}');`
     console.log(query);
-    await client.query(query)
 
 
+    await client.query(query)        
+  
     await client.end()
     console.log("client is closed");
 

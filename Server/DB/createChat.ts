@@ -15,6 +15,8 @@ const createNewChatDB = async  (chat_name:string,user_name:string): Promise<void
     })
 
 
+  
+        
     await client.connect()
 
 
@@ -26,15 +28,17 @@ const createNewChatDB = async  (chat_name:string,user_name:string): Promise<void
     await client.query({ text:InsertToChats})
     
     await client.query({ text:InsertToChatUser})
-        
+
     
-        
+    await client.end()
+
+
+    
    
      
 
         
     
-    await client.end()
 
 
 

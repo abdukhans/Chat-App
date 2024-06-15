@@ -13,6 +13,8 @@ async function getUserByName(user_u_name){
     })
 
 
+        
+    
     //const {name,hashedPass} = user
     await client.connect()
 
@@ -42,6 +44,8 @@ async function getUserByName(user_u_name){
 
         return res.rows[0].hash_pass;
     }
+
+
 }
 
 
