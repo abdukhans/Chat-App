@@ -1,7 +1,68 @@
 const user_name = localStorage.getItem('USER_NAME')
+const Token     = localStorage.getItem('TOKEN')
+var curGroup    = ''
+
 const socket = new WebSocket(`ws://localhost:3000/?clientId=${localStorage.getItem('TOKEN')}`)
 
 console.log(user_name.toString());
+
+async function getMsgs(params) {
+    
+}
+async function  getGroups() {
+
+    const res = await fetch("http://localhost:3000/api/v1/users/getChatsFromUser",
+        {
+            method: "GET",
+            headers:{
+                "Authorization": `Bearer ${Token}`,
+                "Content-Type": "application/json"
+            }
+           
+            
+        })
+
+    const resJ = await res.json();
+    
+
+
+    const GCResultsEl = document.querySelector('.GCResults')
+
+
+    console.log(resJ.chats);
+
+
+    curGroup = resJ.chats[0].chat_name;
+
+    console.log('curGrpp ' , curGroup);
+   
+    resJ.chats.map((group_name)=>{
+
+        const groupEl = document.createElement('div');
+
+        groupEl.classList.add('GroupRes')
+
+        groupEl.innerText = group_name.chat_name
+
+        GCResultsEl.appendChild(groupEl);
+
+
+    })
+
+}
+
+
+
+
+
+async function Init(){
+    await getGroups();
+
+    await getMsgs();
+
+    
+
+}
 
 
 
@@ -88,3 +149,5 @@ socket.addEventListener("message", ({ data }) => {
 })
 
 
+
+Init();
