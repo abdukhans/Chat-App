@@ -23,7 +23,7 @@ const getMsgsFromChatDB = async  (user_name:string,chat_name:string): Promise<an
 
     console.log("USER:  ", user_name);
     
-    const query = `SELECT msg FROM msgs WHERE chat_name = '${chat_name}' AND  exists (SELECT * FROM chat_user WHERE chat_name = '${chat_name}' and user_name = '${user_name}'); `
+    const query = `SELECT msg, user_name FROM msgs WHERE chat_name = '${chat_name}' AND  exists (SELECT * FROM chat_user WHERE chat_name = '${chat_name}' and user_name = '${user_name}'); `
     
     //select msg from msgs where chat_name = 'TestChatUI';
 
