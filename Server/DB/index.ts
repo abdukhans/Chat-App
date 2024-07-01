@@ -10,7 +10,7 @@ import {saveMsg} from './saveMsg'
 import {JoinChatDB} from './joinChat'
 import {getUsersFromChat} from './getUserFromChat'
 import {getChatsFromUserDB}from './getChatsFromUser'
-import {getMsgsFromChat} from './getMsgs'
+import {getMsgsFromChatDB} from './getMsgs'
 export   {
         CreateTable,
         getChatsFromUserDB,
@@ -20,4 +20,4 @@ export   {
         saveMsg,
         JoinChatDB,
         getUsersFromChat,
-        getMsgsFromChat}
+        getMsgsFromChatDB}
