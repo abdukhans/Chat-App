@@ -8,7 +8,7 @@ const MsgRouter = Router();
 MsgRouter.post('/createChat' , createChat)
 MsgRouter.post('/joinChat', joinChat )
 MsgRouter.get('/getChatsFromUser', getChatsFromUser )
-MsgRouter.get('/getMsgsFromChat',getMsgsFromChat)
+MsgRouter.post('/getMsgsFromChat',getMsgsFromChat)
 
 
 

@@ -152,7 +152,9 @@ wsServer.on('connection', async (socket,req)=>{
             
           
           if (socket) {
-            socket.send(msg)
+
+            const data = JSON.stringify({msg:msg, user_name:user.user_name, chat_name:chat_name})
+            socket.send(data)
             //console.log("SEND TO USER  ", user_name);
 
           }else{
